@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Button } from "react-native";
 import ApiCalling from "./ApiCalling";
-// import Button from "../../../calculator-native/components/Button";
 
 function MainScreen() {
   const [items, setItems] = useState();
