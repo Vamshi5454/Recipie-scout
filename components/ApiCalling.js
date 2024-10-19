@@ -10,60 +10,71 @@ import {
 import axios from "axios";
 import { API_KEY } from "@env";
 import { useEffect, useState } from "react";
-import IngredeintsScreen from "./IngredientsScreen";
 import { useNavigation } from "@react-navigation/native";
-import MainScreen from "./MainScreen";
 
-function ApiCalling({ route, navigation }) {
-  const { ingredients } = route.params;
+function ApiCalling({ route }) {
+  const {
+    ingredients: { items },
+  } = route.params;
+
+  console.log(items);
   const [recipies, setRecipies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
-  const fetchRecipe = async (ingredients) => {
+  const fetchRecipe = async (items) => {
+    // console.log("in the function");
+    // console.log(API_KEY);
+    // console.log(items);
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(
-        `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=${API_KEY}`
+        `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${items}&apiKey=${API_KEY}`
       );
       setRecipies(response.data);
-
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       setError(err);
     }
     setLoading(false);
   };
 
-  const navigate = useNavigation();
+  useEffect(() => {
+    if (items) {
+      fetchRecipe(items);
+    }
+  }, [items]);
 
-  handleBack = () => {
-    // navigation.navigate("main");
+  const handleBack = () => {
     navigation.goBack();
   };
-  useEffect(() => {
-    if (ingredients) {
-      fetchRecipe(ingredients);
-    }
-  }, [ingredients]);
+
+  const handleItem = (id) => {
+    navigation.navigate("IngredientsScreen", { PressedItem: { id } });
+  };
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>{error.message}</Text>;
+
   return (
     <View style={styles.container}>
-      <Text>{ingredients}</Text>
+      <Text>{items}</Text>
       <FlatList
         style={styles.resultItems}
         data={recipies}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.resItem} onPress={handleItem}>
+          <TouchableOpacity
+            style={styles.resItem}
+            onPress={() => handleItem(item.id)}
+          >
             <Text>{item.title}</Text>
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-      <Button title="back" onPress={handleBack} style={styles.btn} />
+      <Button title="Back" onPress={handleBack} style={styles.btn} />
     </View>
   );
 }
@@ -75,7 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    // backgroundColor: "#CF6262FF",
   },
   btn: {
     position: "absolute",

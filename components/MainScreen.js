@@ -13,19 +13,15 @@ import { useNavigation } from "@react-navigation/native";
 
 function MainScreen() {
   const [items, setItems] = useState();
-  //   const [pressed, setPressed] = useState(false);
   const navigation = useNavigation();
 
   const handlePress = () => {
     // setPressed(true);
-    // setItems("");
-    navigation.navigate("ApiCalling", (ingredients = { items }));
+    // console.log(items);
+    navigation.navigate("ApiCalling", { ingredients: { items } });
   };
 
-  //   const handleBack = () => {
-  //     // setPressed(false);
-  //   };
-  console.log(items);
+  //   console.log(items);
   return (
     <View style={styles.container}>
       <Text>hi this is main screen</Text>
