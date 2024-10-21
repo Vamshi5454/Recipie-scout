@@ -23,6 +23,7 @@ function IngredeintsScreen({ route }) {
       );
 
       setItemFromId(responce.data.extendedIngredients);
+      console.log(ItemFromId);
       //   console.log(responce.data.extendedIngredients);
     } catch (err) {
       console.log(err);
@@ -41,13 +42,18 @@ function IngredeintsScreen({ route }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={setItemFromId}
-        renderItem={({ item }) => <Text>{item}</Text>}
+        data={ItemFromId.extendedIngredients}
+        renderItem={({ item }) => (
+          <View>
+            <Text>Got an Api calling issue</Text>
+          </View>
+        )}
         // keyExtractor={(item) => item.id.toString()}
         keyExtractor={(item) => item.id.toString()}
       />
 
       <Text>{id}</Text>
+
       <Button title="Back" onPress={handleBack} style={styles.btn} />
     </View>
   );
